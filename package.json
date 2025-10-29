@@ -36,7 +36,7 @@
 		"strict": true,
 		"credentials": [],
 		"nodes": [
-			"dist/nodes/@reborn82/pdfToImg/PdfToImg.node.js"
+			"dist/nodes/pdfToImg/PdfToImg.node.js"
 		]
 	},
 	"devDependencies": {
