@@ -12,9 +12,7 @@ import {
 	INodeExecutionData,
 	INodeType,
 	INodeTypeDescription,
-
-
-	// IBinaryData,
+	IBinaryData,
 	// BINARY_ENCODING,
 } from 'n8n-workflow';
 
@@ -106,7 +104,7 @@ export class PdfToImg implements INodeType {
 				const pdfPath = path.join(tempDir, 'input.pdf');
 				const pdfBuffer = await this.helpers.getBinaryDataBuffer(itemIndex, binaryFieldName);
 				await fs.writeFileSync(pdfPath, pdfBuffer);
-				const options: any = {
+				const options: pdfPoppler.Options = {
 					format: 'png',
 					out_dir: tempDir,
 					out_prefix: 'page',
@@ -139,7 +137,7 @@ export class PdfToImg implements INodeType {
 				}
 
 				let resultImg: INodeExecutionData = { json: {} };
-				const binaryData: { [key: string]: any } = {};
+				const binaryData: Record<string, IBinaryData> = {};
 				for (const image of result) {
 					const dataKey = `page_${image.pageNumber}`;
 					const dataBase64 = image.data.toString('base64');
