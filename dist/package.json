@@ -36,7 +36,7 @@
         "strict": true,
         "credentials": [],
         "nodes": [
-            "dist/nodes/pdfToImg/PdfToImg.node.js"
+            "dist/nodes/PdfToImg/PdfToImg.node.ts"
         ]
     },
     "devDependencies": {
