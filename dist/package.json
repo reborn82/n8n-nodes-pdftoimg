@@ -1,6 +1,6 @@
 {
-    "name": "@reborn82/n8n-nodes-pdftoimg",
-    "version": "0.1.4",
+    "name": "n8n-nodes-am-pdftoimg",
+    "version": "0.1.5",
     "description": "n8n convert PDF to Image node",
     "license": "MIT",
     "homepage": "https://n8n.io",
