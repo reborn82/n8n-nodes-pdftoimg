@@ -1,6 +1,6 @@
 {
     "name": "n8n-nodes-am-pdftoimg",
-    "version": "0.1.9",
+    "version": "0.2.0",
     "description": "n8n convert PDF to Image node",
     "license": "MIT",
     "homepage": "https://n8n.io",
@@ -26,7 +26,8 @@
         "lint": "n8n-node lint",
         "lint:fix": "n8n-node lint --fix",
         "release": "n8n-node release",
-        "prepublishOnly": "n8n-node prerelease"
+        "prepublishOnly": "n8n-node prerelease",
+        "postinstall": "patch-package"
     },
     "files": [
         "dist"
@@ -45,12 +46,13 @@
         "cross-env": "^10.1.0",
         "eslint": "9.32.0",
         "n8n-workflow": "^1.47.0",
+        "patch-package": "^8.0.1",
         "prettier": "3.6.2",
         "release-it": "^19.0.4",
         "typescript": "5.9.2"
     },
     "dependencies": {
-        "pdf-poppler": "file:pdf-poppler"
+        "pdf-poppler": "^0.2.3"
     },
     "peerDependencies": {
         "n8n-workflow": "*"

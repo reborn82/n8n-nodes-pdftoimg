@@ -1,0 +1,22 @@
+diff --git a/node_modules/pdf-poppler/index.js b/node_modules/pdf-poppler/index.js
+index ac24035..9ca06f2 100644
+--- a/node_modules/pdf-poppler/index.js
++++ b/node_modules/pdf-poppler/index.js
+@@ -3,7 +3,7 @@ const path = require('path');
+ const {spawn} = require('child_process');
+ 
+ let platform = os.platform();
+-if (!['darwin', 'win32'].includes(platform)) {
++if (!['darwin', 'win32' ,'linux'].includes(platform)) {
+     console.error(`${platform} is NOT supported.`);
+     process.exit(1);
+ }
+@@ -16,7 +16,7 @@ let execOptions = {
+     shell: false
+ };
+ 
+-if (platform === 'win32') {
++if (platform === 'win32' || platform === 'linux') {
+     popplerPath = path.join(
+         __dirname,
+         'lib',
