@@ -20,7 +20,7 @@
 		"url": "https://github.com/reborn82/n8n-nodes-pdftoimg.git"
 	},
 	"scripts": {
-		"build": "n8n-node build",
+		"build": "n8n-node build && cpx \"patches/**/*\" dist/patche",
 		"build:watch": "tsc --watch",
 		"dev": "cross-env N8N_LOG_LEVEL=debug n8n-node dev",
 		"lint": "n8n-node lint",
