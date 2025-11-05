@@ -181,7 +181,6 @@ class PdfToImg {
                 }
             }
         }
-        console.log('Return Data : ', returnData);
         return [this.helpers.returnJsonArray(returnData)];
     }
 }

@@ -4,7 +4,7 @@ import * as pdfPoppler from 'pdf-poppler';
 import * as path from 'path';
 import * as fs from 'fs';
 import { tmpdir } from 'os';
-
+// import { execSync } from 'child_process'
 /* eslint-enable @n8n/community-nodes/no-restricted-imports */
 
 import {
@@ -113,7 +113,7 @@ export class PdfToImg implements INodeType {
 
 				let convertedFiles: string[] = [];
 				convertedFiles = await pdfPoppler.convert(pdfPath, options);
-				console.log('Converted Files : ', convertedFiles);
+			    console.log('Converted Files : ', convertedFiles);
 
 				const fileIndir = await fs.readdirSync(tempDir);
 				const imageFiles = fileIndir.filter((file) => path.extname(file).toLowerCase() === '.png');
@@ -169,7 +169,7 @@ export class PdfToImg implements INodeType {
 				}
 			}
 		}
-		console.log('Return Data : ', returnData);
+		
 
 		return [this.helpers.returnJsonArray(returnData)];
 	}
