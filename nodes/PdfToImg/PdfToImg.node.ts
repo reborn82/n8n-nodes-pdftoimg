@@ -1,5 +1,5 @@
 /* eslint-disable @n8n/community-nodes/no-restricted-imports */
-// @ts-expect-error: pdf-poppler has no type definitions
+/* eslint-disable import-x/no-unresolved */ // @ts-expect-error: pdf-poppler has no type definitions 
 import * as pdfPoppler from 'pdf-poppler-core';
 import * as path from 'path';
 import * as fs from 'fs';
