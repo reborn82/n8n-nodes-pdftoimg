@@ -1,6 +1,6 @@
 {
     "name": "n8n-nodes-am-pdftoimg",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "description": "n8n convert PDF to Image node",
     "license": "MIT",
     "homepage": "https://n8n.io",
@@ -48,6 +48,9 @@
         "prettier": "3.6.2",
         "release-it": "^19.0.4",
         "typescript": "5.9.2"
+    },
+    "dependencies": {
+        "pdf-poppler": "file:pdf-poppler"
     },
     "peerDependencies": {
         "n8n-workflow": "*"

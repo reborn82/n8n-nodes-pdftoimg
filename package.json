@@ -49,6 +49,9 @@
 		"release-it": "^19.0.4",
 		"typescript": "5.9.2"
 	},
+	"dependencies": {
+		"pdf-poppler": "file:pdf-poppler"
+	},
 	"peerDependencies": {
 		"n8n-workflow": "*"
 	}
