@@ -1,6 +1,6 @@
 /* eslint-disable @n8n/community-nodes/no-restricted-imports */
 // @ts-expect-error: pdf-poppler has no type definitions
-import * as pdfPoppler from 'pdf-poppler';
+import * as pdfPoppler from 'pdf-poppler-fixed';
 import * as path from 'path';
 import * as fs from 'fs';
 import { tmpdir } from 'os';

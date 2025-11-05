@@ -17,17 +17,16 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/reborn82/n8n-nodes-pdftoimg.git"
+		"url": "git+https://github.com/reborn82/n8n-nodes-pdftoimg.git"
 	},
 	"scripts": {
-		"build": "n8n-node build && cpx \"patches/**/*\" dist/patche",
+		"build": "n8n-node build",
 		"build:watch": "tsc --watch",
 		"dev": "cross-env N8N_LOG_LEVEL=debug n8n-node dev",
 		"lint": "n8n-node lint",
 		"lint:fix": "n8n-node lint --fix",
 		"release": "n8n-node release",
-		"prepublishOnly": "n8n-node prerelease",
-		"postinstall": "patch-package"
+		"prepublishOnly": "n8n-node prerelease"
 	},
 	"files": [
 		"dist"
@@ -43,7 +42,6 @@
 	"devDependencies": {
 		"@n8n/node-cli": "*",
 		"@types/node": "^24.9.1",
-		"cpx": "^1.5.0",
 		"cross-env": "^10.1.0",
 		"eslint": "9.32.0",
 		"n8n-workflow": "^1.47.0",
@@ -53,7 +51,7 @@
 		"typescript": "5.9.2"
 	},
 	"dependencies": {
-		"pdf-poppler": "^0.2.3"
+		"pdf-poppler-fixed": "^0.1.1"
 	},
 	"peerDependencies": {
 		"n8n-workflow": "*"
