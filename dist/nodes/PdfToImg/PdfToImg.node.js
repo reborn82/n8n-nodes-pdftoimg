@@ -34,7 +34,7 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PdfToImg = void 0;
-const pdfPoppler = __importStar(require("pdf-poppler-core"));
+const pdfPoppler = __importStar(require("pdf-poppler-myfixed"));
 const path = __importStar(require("path"));
 const fs = __importStar(require("fs"));
 const os_1 = require("os");

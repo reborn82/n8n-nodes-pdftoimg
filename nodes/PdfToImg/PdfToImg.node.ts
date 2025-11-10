@@ -1,6 +1,6 @@
 /* eslint-disable @n8n/community-nodes/no-restricted-imports */
-/* eslint-disable import-x/no-unresolved */ // @ts-expect-error: pdf-poppler has no type definitions 
-import * as pdfPoppler from 'pdf-poppler-core';
+/* eslint-disable import-x/no-unresolved */ // @ts-expect-error: pdf-poppler has no type definitions
+import * as pdfPoppler from 'pdf-poppler-myfixed';
 import * as path from 'path';
 import * as fs from 'fs';
 import { tmpdir } from 'os';
@@ -112,11 +112,13 @@ export class PdfToImg implements INodeType {
 				};
 
 				let convertedFiles: string[] = [];
-				convertedFiles = await pdfPoppler.convert(pdfPath, options);
-			    console.log('Converted Files : ', convertedFiles);
 
+				convertedFiles = await pdfPoppler.convert(pdfPath, options);
+				console.log('Converted Files : ', convertedFiles);
+			
 				const fileIndir = await fs.readdirSync(tempDir);
 				const imageFiles = fileIndir.filter((file) => path.extname(file).toLowerCase() === '.png');
+			
 				imageFiles.sort((a, b) => {
 					const pageNumA = parseInt(a.replace('page-', '').replace('.png', ''));
 					const pageNumB = parseInt(b.replace('page-', '').replace('.png', ''));
@@ -169,7 +171,6 @@ export class PdfToImg implements INodeType {
 				}
 			}
 		}
-		
 
 		return [this.helpers.returnJsonArray(returnData)];
 	}
