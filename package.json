@@ -51,7 +51,7 @@
 		"typescript": "5.9.2"
 	},
 	"dependencies": {
-		"pdf-poppler-myfixed": "^1.0.0"
+		"pdf-poppler-myfixed" : "^1.0.2"	
 	},
 	"peerDependencies": {
 		"n8n-workflow": "*"

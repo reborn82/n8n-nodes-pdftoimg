@@ -36,7 +36,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PdfToImg = void 0;
 const pdfPoppler = __importStar(require("pdf-poppler-myfixed"));
 const path = __importStar(require("path"));
-const fs = __importStar(require("fs"));
+const fs_1 = require("fs");
 const os_1 = require("os");
 class PdfToImg {
     constructor() {
@@ -55,48 +55,16 @@ class PdfToImg {
             outputs: ['main'],
             properties: [
                 {
-                    displayName: 'Source',
-                    name: 'source',
-                    type: 'options',
-                    noDataExpression: true,
-                    options: [
-                        {
-                            name: 'Binary',
-                            value: 'binary',
-                            description: 'Use binary data',
-                        },
-                    ],
-                    default: 'binary',
-                },
-                {
                     displayName: 'Binary Field',
                     name: 'binaryFieldName',
                     type: 'string',
-                    displayOptions: {
-                        show: {
-                            source: ['binary'],
-                        },
-                    },
                     default: 'data',
                     required: true,
                     description: 'The name of the binary field containing the PDF file',
                 },
                 {
-                    displayName: 'PDF URL',
-                    name: 'pdfUrl',
-                    type: 'string',
-                    displayOptions: {
-                        show: {
-                            source: ['url'],
-                        },
-                    },
-                    default: '',
-                    required: true,
-                    description: 'URL of the PDF file to convert',
-                },
-                {
                     displayName: 'Image Quality (DPI)',
-                    name: 'quality',
+                    name: 'density',
                     type: 'number',
                     typeOptions: {
                         minValue: 72,
@@ -104,6 +72,27 @@ class PdfToImg {
                     },
                     default: 200,
                     description: 'Output image quality/DPI (72-600)',
+                },
+                {
+                    displayName: 'Scale',
+                    name: 'scale',
+                    type: 'number',
+                    default: 1,
+                    description: 'Image Scale',
+                },
+                {
+                    displayName: 'Page Start',
+                    name: 'page_start',
+                    type: 'number',
+                    default: null,
+                    description: 'Specifies the first page to convert',
+                },
+                {
+                    displayName: 'Page End',
+                    name: 'page_end',
+                    type: 'number',
+                    default: null,
+                    description: 'Specifies the last page to convert',
                 },
             ],
         };
@@ -115,65 +104,84 @@ class PdfToImg {
         for (let itemIndex = 0; itemIndex < length; itemIndex++) {
             try {
                 const binaryFieldName = this.getNodeParameter('binaryFieldName', itemIndex);
+                const density = this.getNodeParameter('density', itemIndex, 150);
+                const scale = this.getNodeParameter('scale', itemIndex);
+                const pageStart = this.getNodeParameter('page_start', itemIndex, null);
+                const pageEnd = this.getNodeParameter('page_end', itemIndex, null);
                 const tempDir = path.join((0, os_1.tmpdir)(), `pdf-to-img-${Date.now()}`);
-                await fs.mkdirSync(tempDir, { recursive: true });
+                await fs_1.promises.mkdir(tempDir, { recursive: true });
                 const pdfPath = path.join(tempDir, 'input.pdf');
                 const pdfBuffer = await this.helpers.getBinaryDataBuffer(itemIndex, binaryFieldName);
-                await fs.writeFileSync(pdfPath, pdfBuffer);
-                const options = {
-                    format: 'png',
-                    out_dir: tempDir,
-                    out_prefix: 'page',
-                    page: null,
-                };
-                let convertedFiles = [];
-                convertedFiles = await pdfPoppler.convert(pdfPath, options);
-                console.log('Converted Files : ', convertedFiles);
-                const fileIndir = await fs.readdirSync(tempDir);
-                const imageFiles = fileIndir.filter((file) => path.extname(file).toLowerCase() === '.png');
-                imageFiles.sort((a, b) => {
-                    const pageNumA = parseInt(a.replace('page-', '').replace('.png', ''));
-                    const pageNumB = parseInt(b.replace('page-', '').replace('.png', ''));
-                    return pageNumA - pageNumB;
-                });
-                const result = [];
-                for (const fileName of imageFiles) {
-                    const imagePath = path.join(tempDir, fileName);
-                    const pageNumber = parseInt(fileName.replace('page-', '').replace('.png', ''));
-                    const imageBuffer = fs.readFileSync(imagePath);
-                    result.push({
-                        data: imageBuffer,
-                        filename: fileName,
-                        pageNumber: pageNumber,
-                        totalPages: imageFiles.length,
-                    });
-                }
-                let resultImg = { json: {} };
-                const binaryData = {};
-                for (const image of result) {
-                    const dataKey = `page_${image.pageNumber}`;
-                    const dataBase64 = image.data.toString('base64');
-                    binaryData[dataKey] = {
-                        data: dataBase64,
-                        mimeType: 'image/png',
-                        fileExtension: 'png',
-                        fileName: image.filename,
+                await fs_1.promises.writeFile(pdfPath, pdfBuffer);
+                try {
+                    const scale_img = scale * 1024;
+                    const options = {
+                        format: 'png',
+                        out_dir: tempDir,
+                        out_prefix: 'page',
+                        scale: scale_img,
+                        density: density,
+                        page_start: pageStart,
+                        page_end: pageEnd
                     };
+                    console.log('IMG Options : ', options);
+                    let convertedFiles = [];
+                    convertedFiles = await pdfPoppler.convert(pdfPath, options);
+                    console.log('Converted Files : ', convertedFiles);
+                    const fileIndir = await fs_1.promises.readdir(tempDir);
+                    const imageFiles = fileIndir.filter((file) => path.extname(file).toLowerCase() === '.png');
+                    imageFiles.sort((a, b) => {
+                        const pageNumA = parseInt(a.replace('page-', '').replace('.png', ''));
+                        const pageNumB = parseInt(b.replace('page-', '').replace('.png', ''));
+                        return pageNumA - pageNumB;
+                    });
+                    const result = [];
+                    for (const fileName of imageFiles) {
+                        const imagePath = path.join(tempDir, fileName);
+                        const pageNumber = parseInt(fileName.replace('page-', '').replace('.png', ''));
+                        const imageBuffer = await fs_1.promises.readFile(imagePath);
+                        result.push({
+                            data: imageBuffer,
+                            filename: fileName,
+                            pageNumber: pageNumber,
+                            totalPages: imageFiles.length,
+                        });
+                    }
+                    let resultImg = { json: {} };
+                    const binaryData = {};
+                    for (const image of result) {
+                        const dataKey = `page_${image.pageNumber}`;
+                        const dataBase64 = image.data.toString('base64');
+                        binaryData[dataKey] = {
+                            data: dataBase64,
+                            mimeType: 'image/png',
+                            fileExtension: 'png',
+                            fileName: image.filename,
+                        };
+                    }
+                    resultImg = {
+                        json: {
+                            success: true,
+                            totalPages: result[0].totalPages,
+                            convertedPages: result.length,
+                            images: result.map((img) => ({
+                                pageNumber: img.pageNumber,
+                                filename: img.filename,
+                                size: img.data.length,
+                            })),
+                        },
+                        binary: binaryData,
+                    };
+                    returnData.push(resultImg);
                 }
-                resultImg = {
-                    json: {
-                        success: true,
-                        totalPages: result[0].totalPages,
-                        convertedPages: result.length,
-                        images: result.map((img) => ({
-                            pageNumber: img.pageNumber,
-                            filename: img.filename,
-                            size: img.data.length,
-                        })),
-                    },
-                    binary: binaryData,
-                };
-                returnData.push(resultImg);
+                catch (error) {
+                    if (error instanceof Error) {
+                        throw error;
+                    }
+                }
+                finally {
+                    await fs_1.promises.rm(tempDir, { recursive: true, force: true });
+                }
             }
             catch (error) {
                 if (error instanceof Error) {
